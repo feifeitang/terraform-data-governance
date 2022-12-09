@@ -23,7 +23,7 @@ provider "google-beta" {
   zone    = "us-central1-c"
 }
 
-# build sa
+# service account
 resource "google_service_account" "joanne_terraform_sa" {
   account_id   = "joanne-terraform"
   display_name = "joanne-terraform"
@@ -31,6 +31,29 @@ resource "google_service_account" "joanne_terraform_sa" {
 
 resource "google_service_account_key" "joanne_terraform_sa_key" {
   service_account_id = google_service_account.joanne_terraform_sa.name
+}
+
+# data policies
+resource "google_bigquery_datapolicy_data_policy" "crime_policy" {
+  provider         = google-beta
+  location         = "us"
+  data_policy_id   = "crime_policy"
+  policy_tag       = google_data_catalog_policy_tag.crime_policy_tag.name
+  data_policy_type = "DATA_MASKING_POLICY"
+  data_masking_policy {
+    predefined_expression = "ALWAYS_NULL"
+  }
+}
+
+resource "google_bigquery_datapolicy_data_policy" "senitive_policy" {
+  provider         = google-beta
+  location         = "us"
+  data_policy_id   = "senitive_policy"
+  policy_tag       = google_data_catalog_policy_tag.senitive_policy_tag.name
+  data_policy_type = "DATA_MASKING_POLICY"
+  data_masking_policy {
+    predefined_expression = "ALWAYS_NULL"
+  }
 }
 
 # policy tags
