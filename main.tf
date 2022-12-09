@@ -36,27 +36,27 @@ resource "google_service_account_key" "joanne_terraform_sa_key" {
 # policy tags
 resource "google_data_catalog_policy_tag" "contact_policy_tag" {
   provider     = google-beta
-  taxonomy     = google_data_catalog_taxonomy.my_taxonomy.id
+  taxonomy     = google_data_catalog_taxonomy.tf_taxonomy.id
   display_name = "Contact data"
   description  = "associated with phone data"
 }
 
 resource "google_data_catalog_policy_tag" "crime_policy_tag" {
   provider     = google-beta
-  taxonomy     = google_data_catalog_taxonomy.my_taxonomy.id
+  taxonomy     = google_data_catalog_taxonomy.tf_taxonomy.id
   display_name = "Crime data"
   description  = "associated with crime data"
 }
 
 resource "google_data_catalog_policy_tag" "senitive_policy_tag" {
   provider     = google-beta
-  taxonomy     = google_data_catalog_taxonomy.my_taxonomy.id
+  taxonomy     = google_data_catalog_taxonomy.tf_taxonomy.id
   display_name = "Sensitive data"
   description  = "associated with identity, birth, and region data"
 }
 
 # policy tag taxonomy
-resource "google_data_catalog_taxonomy" "my_taxonomy" {
+resource "google_data_catalog_taxonomy" "tf_taxonomy" {
   provider     = google-beta
   region       = "us"
   display_name = "terraform_taxonomy"
