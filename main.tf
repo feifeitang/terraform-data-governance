@@ -33,6 +33,80 @@ resource "google_service_account_key" "joanne_terraform_sa_key" {
   service_account_id = google_service_account.joanne_terraform_sa.name
 }
 
+# bigquery table
+resource "google_bigquery_dataset" "tf_dataset" {
+  dataset_id = "terraform_demo"
+  # friendly_name               = "test"
+  # description                 = "This is a test description"
+  location                    = "US"
+  default_table_expiration_ms = 3600000
+
+  labels = {
+    env = "default"
+  }
+}
+
+resource "google_bigquery_table" "mock" {
+  dataset_id = google_bigquery_dataset.tf_dataset.dataset_id
+  table_id   = "mock_data"
+
+  time_partitioning {
+    type = "DAY"
+  }
+
+  labels = {
+    env = "default"
+  }
+
+  schema = <<EOF
+[
+  {
+    "name": "id",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "id"
+  },
+  {
+    "name": "name",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "name"
+  },
+  {
+    "name": "identity",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "identity"
+  },
+  {
+    "name": "birth",
+    "type": "DATE",
+    "mode": "NULLABLE",
+    "description": "birth"
+  },
+  {
+    "name": "phone",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "phone"
+  },
+  {
+    "name": "region",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "region"
+  },
+  {
+    "name": "crime",
+    "type": "BOOLEAN",
+    "mode": "NULLABLE",
+    "description": "crime"
+  }
+]
+EOF
+
+}
+
 # data policies
 resource "google_bigquery_datapolicy_data_policy" "crime_policy" {
   provider         = google-beta
