@@ -44,22 +44,116 @@ resource "google_bigquery_dataset" "tf_dataset" {
   }
 }
 
+# resource "google_bigquery_table" "mock" {
+#   dataset_id = google_bigquery_dataset.tf_dataset.dataset_id
+#   table_id   = "mock_test"
+
+# external_data_configuration {
+#   autodetect    = true
+#   source_format = "CSV"
+
+#   csv_options {
+#     quote = ""
+#   }
+
+#   source_uris = [
+#     "https://storage.cloud.google.com/chi110356042/mock1212.csv"
+#   ]
+# }
+
+# }
+
 resource "google_bigquery_table" "mock" {
   dataset_id = google_bigquery_dataset.tf_dataset.dataset_id
-  table_id   = "mock_test"
+  table_id   = "mock_data"
 
-  external_data_configuration {
-    autodetect    = true
-    source_format = "CSV"
+  # labels = {
+  #   env = "terraform_demo"
+  # }
 
-    csv_options {
-      quote = ""
+  schema = <<EOF
+[
+  {
+    "name": "int64_field_0",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+  },
+  {
+    "name": "id",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+  },
+  {
+    "name": "name",
+    "type": "STRING",
+    "mode": "NULLABLE",
+  },
+  {
+    "name": "identity",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "policyTags": {
+      "names": [
+        "${google_data_catalog_policy_tag.senitive_policy_tag.id}"
+      ]
     }
-
-    source_uris = [
-      "https://storage.cloud.google.com/chi110356042/mock1212.csv"
-    ]
+  },
+  {
+    "name": "birth",
+    "type": "DATE",
+    "mode": "NULLABLE",
+    "policyTags": {
+      "names": [
+        "${google_data_catalog_policy_tag.senitive_policy_tag.id}"
+      ]
+    }
+  },
+  {
+    "name": "phone",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "policyTags": {
+      "names": [
+        "projects/datacloud-lab/locations/us/taxonomies/2237078495300201504/policyTags/4737454283524161665"
+      ]
+    }
+  },
+  {
+    "name": "region",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "policyTags": {
+      "names": [
+        "${google_data_catalog_policy_tag.senitive_policy_tag.id}"
+      ]
+    }
+  },
+  {
+    "name": "crime",
+    "type": "BOOLEAN",
+    "mode": "NULLABLE",
+    "policyTags": {
+      "names": [
+        "projects/datacloud-lab/locations/us/taxonomies/3757061504901883532/policyTags/6090648724365740735"
+      ]
+    }
   }
+]
+EOF
+
+  # external_data_configuration {
+  #   autodetect    = false
+  #   source_format = "CSV"
+
+  #   csv_options {
+  #     quote = ""
+  #   }
+
+  #   source_uris = [
+  #     "https://storage.cloud.google.com/chi110356042/mock1212.csv"
+  #   ]
+  # }
+
 }
 
 # data policies
