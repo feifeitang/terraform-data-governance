@@ -35,9 +35,7 @@ resource "google_service_account_key" "joanne_terraform_sa_key" {
 
 # bigquery table
 resource "google_bigquery_dataset" "tf_dataset" {
-  dataset_id = "terraform_demo"
-  # friendly_name               = "test"
-  # description                 = "This is a test description"
+  dataset_id                  = "terraform_demo"
   location                    = "US"
   default_table_expiration_ms = 3600000
 
@@ -48,63 +46,20 @@ resource "google_bigquery_dataset" "tf_dataset" {
 
 resource "google_bigquery_table" "mock" {
   dataset_id = google_bigquery_dataset.tf_dataset.dataset_id
-  table_id   = "mock_data"
+  table_id   = "mock_test"
 
-  time_partitioning {
-    type = "DAY"
+  external_data_configuration {
+    autodetect    = true
+    source_format = "CSV"
+
+    csv_options {
+      quote = ""
+    }
+
+    source_uris = [
+      "https://storage.cloud.google.com/chi110356042/mock1212.csv"
+    ]
   }
-
-  labels = {
-    env = "default"
-  }
-
-  schema = <<EOF
-[
-  {
-    "name": "id",
-    "type": "INTEGER",
-    "mode": "NULLABLE",
-    "description": "id"
-  },
-  {
-    "name": "name",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "name"
-  },
-  {
-    "name": "identity",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "identity"
-  },
-  {
-    "name": "birth",
-    "type": "DATE",
-    "mode": "NULLABLE",
-    "description": "birth"
-  },
-  {
-    "name": "phone",
-    "type": "INTEGER",
-    "mode": "NULLABLE",
-    "description": "phone"
-  },
-  {
-    "name": "region",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "description": "region"
-  },
-  {
-    "name": "crime",
-    "type": "BOOLEAN",
-    "mode": "NULLABLE",
-    "description": "crime"
-  }
-]
-EOF
-
 }
 
 # data policies
