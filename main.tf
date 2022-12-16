@@ -142,6 +142,36 @@ resource "google_bigquery_table" "mock" {
         "${google_data_catalog_policy_tag.senitive_policy_tag.id}"
       ]
     }
+  },
+  {
+    "name": "phone",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "policyTags": {
+      "names": [
+        "${google_data_catalog_policy_tag.contact_policy_tag.id}"
+      ]
+    }
+  },
+  {
+    "name": "region",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "policyTags": {
+      "names": [
+        "${google_data_catalog_policy_tag.senitive_policy_tag.id}"
+      ]
+    }
+  },
+  {
+    "name": "crime",
+    "type": "BOOLEAN",
+    "mode": "NULLABLE",
+    "policyTags": {
+      "names": [
+        "${google_data_catalog_policy_tag.crime_policy_tag.id}"
+      ]
+    }
   }
 ]
 EOF
