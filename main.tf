@@ -35,10 +35,9 @@ resource "google_service_account_key" "joanne_terraform_sa_key" {
 
 # policy tag taxonomy
 resource "google_data_catalog_taxonomy" "tf_taxonomy" {
-  provider     = google-beta
-  region       = "us-central1"
-  display_name = "terraform_taxonomy"
-  # description            = "A collection of policy tags"
+  provider               = google-beta
+  region                 = "us-central1"
+  display_name           = "terraform_taxonomy"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
 }
 
@@ -91,26 +90,7 @@ resource "google_bigquery_datapolicy_data_policy" "senitive_policy" {
 resource "google_bigquery_dataset" "tf_dataset" {
   dataset_id = "terraform_demo"
   location   = "us-central1"
-
-  # default_table_expiration_ms = 3600000
-
-  # labels = {
-  #   env = "default"
-  # }
 }
-
-# bigquery table
-# resource "google_bigquery_dataset" "tf_dataset_2" {
-#   dataset_id = "terraform_demo_2"
-#   location   = "us-central1"
-
-
-#   # default_table_expiration_ms = 3600000
-
-#   # labels = {
-#   #   env = "default"
-#   # }
-# }
 
 resource "google_bigquery_table" "mock" {
   provider   = google-beta
@@ -123,26 +103,17 @@ resource "google_bigquery_table" "mock" {
     {
       "name": "int64_field_0",
       "type": "INTEGER",
-      "mode": "NULLABLE",
-      "policyTags": {
-        "names": []
-      }
+      "mode": "NULLABLE"
     },
     {
       "name": "id",
       "type": "INTEGER",
-      "mode": "NULLABLE",
-      "policyTags": {
-        "names": []
-      }
+      "mode": "NULLABLE"
     },
     {
       "name": "name",
       "type": "STRING",
-      "mode": "NULLABLE",
-      "policyTags": {
-        "names": []
-      }
+      "mode": "NULLABLE"
     },
     {
       "name": "identity",
