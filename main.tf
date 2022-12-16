@@ -93,10 +93,10 @@ resource "google_bigquery_dataset" "tf_dataset" {
 }
 
 resource "google_bigquery_table" "mock" {
-  provider   = google-beta
-  dataset_id = google_bigquery_dataset.tf_dataset.dataset_id
-  table_id   = "mock_data"
-  # deletion_protection = false
+  provider            = google-beta
+  dataset_id          = google_bigquery_dataset.tf_dataset.dataset_id
+  table_id            = "mock_data"
+  deletion_protection = false
 
   schema = <<EOF
   [
