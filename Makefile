@@ -2,9 +2,9 @@ init:
 	@terraform init
 fmt:
 	@terraform fmt
-validate:
+val:
 	@terraform validate
 plan:
-	@terraform plan -out
+	@terraform plan
 apply:
 	@terraform apply
