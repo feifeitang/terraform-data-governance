@@ -36,7 +36,7 @@ resource "google_service_account_key" "joanne_terraform_sa_key" {
 # policy tag taxonomy
 resource "google_data_catalog_taxonomy" "tf_taxonomy" {
   provider     = google-beta
-  region       = "us"
+  region       = "us-central1"
   display_name = "terraform_taxonomy"
   # description            = "A collection of policy tags"
   activated_policy_types = ["FINE_GRAINED_ACCESS_CONTROL"]
@@ -67,7 +67,7 @@ resource "google_data_catalog_policy_tag" "senitive_policy_tag" {
 # data policies
 resource "google_bigquery_datapolicy_data_policy" "crime_policy" {
   provider         = google-beta
-  location         = "us"
+  location         = "us-central1"
   data_policy_id   = "crime_policy"
   policy_tag       = google_data_catalog_policy_tag.crime_policy_tag.name
   data_policy_type = "DATA_MASKING_POLICY"
@@ -78,7 +78,7 @@ resource "google_bigquery_datapolicy_data_policy" "crime_policy" {
 
 resource "google_bigquery_datapolicy_data_policy" "senitive_policy" {
   provider         = google-beta
-  location         = "us"
+  location         = "us-central1"
   data_policy_id   = "senitive_policy"
   policy_tag       = google_data_catalog_policy_tag.senitive_policy_tag.name
   data_policy_type = "DATA_MASKING_POLICY"
@@ -90,103 +90,111 @@ resource "google_bigquery_datapolicy_data_policy" "senitive_policy" {
 # bigquery table
 resource "google_bigquery_dataset" "tf_dataset" {
   dataset_id = "terraform_demo"
-  location   = "US"
+  location   = "us-central1"
+
   # default_table_expiration_ms = 3600000
 
-  labels = {
-    env = "default"
-  }
+  # labels = {
+  #   env = "default"
+  # }
 }
 
+# bigquery table
+# resource "google_bigquery_dataset" "tf_dataset_2" {
+#   dataset_id = "terraform_demo_2"
+#   location   = "us-central1"
+
+
+#   # default_table_expiration_ms = 3600000
+
+#   # labels = {
+#   #   env = "default"
+#   # }
+# }
+
 resource "google_bigquery_table" "mock" {
+  provider   = google-beta
   dataset_id = google_bigquery_dataset.tf_dataset.dataset_id
   table_id   = "mock_data"
-
-  # labels = {
-  #   env = "terraform_demo"
-  # }
+  # deletion_protection = false
 
   schema = <<EOF
-[
-  {
-    "name": "int64_field_0",
-    "type": "INTEGER",
-    "mode": "NULLABLE"
-  },
-  {
-    "name": "id",
-    "type": "INTEGER",
-    "mode": "NULLABLE"
-  },
-  {
-    "name": "name",
-    "type": "STRING",
-    "mode": "NULLABLE"
-  },
-  {
-    "name": "identity",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "policyTags": {
-      "names": [
-        "${google_data_catalog_policy_tag.senitive_policy_tag.id}"
-      ]
+  [
+    {
+      "name": "int64_field_0",
+      "type": "INTEGER",
+      "mode": "NULLABLE",
+      "policyTags": {
+        "names": []
+      }
+    },
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "mode": "NULLABLE",
+      "policyTags": {
+        "names": []
+      }
+    },
+    {
+      "name": "name",
+      "type": "STRING",
+      "mode": "NULLABLE",
+      "policyTags": {
+        "names": []
+      }
+    },
+    {
+      "name": "identity",
+      "type": "STRING",
+      "mode": "NULLABLE",
+      "policyTags": {
+        "names": [
+          "${google_data_catalog_policy_tag.senitive_policy_tag.id}"
+        ]
+      }
+    },
+    {
+      "name": "birth",
+      "type": "DATE",
+      "mode": "NULLABLE",
+      "policyTags": {
+        "names": [
+          "${google_data_catalog_policy_tag.senitive_policy_tag.id}"
+        ]
+      }
+    },
+    {
+      "name": "phone",
+      "type": "INTEGER",
+      "mode": "NULLABLE",
+      "policyTags": {
+        "names": [
+          "${google_data_catalog_policy_tag.contact_policy_tag.id}"
+        ]
+      }
+    },
+    {
+      "name": "region",
+      "type": "STRING",
+      "mode": "NULLABLE",
+      "policyTags": {
+        "names": [
+          "${google_data_catalog_policy_tag.senitive_policy_tag.id}"
+        ]
+      }
+    },
+    {
+      "name": "crime",
+      "type": "BOOLEAN",
+      "mode": "NULLABLE",
+      "policyTags": {
+        "names": [
+          "${google_data_catalog_policy_tag.crime_policy_tag.id}"
+        ]
+      }
     }
-  },
-  {
-    "name": "birth",
-    "type": "DATE",
-    "mode": "NULLABLE",
-    "policyTags": {
-      "names": [
-        "${google_data_catalog_policy_tag.senitive_policy_tag.id}"
-      ]
-    }
-  },
-  {
-    "name": "phone",
-    "type": "INTEGER",
-    "mode": "NULLABLE",
-    "policyTags": {
-      "names": [
-        "${google_data_catalog_policy_tag.contact_policy_tag.id}"
-      ]
-    }
-  },
-  {
-    "name": "region",
-    "type": "STRING",
-    "mode": "NULLABLE",
-    "policyTags": {
-      "names": [
-        "${google_data_catalog_policy_tag.senitive_policy_tag.id}"
-      ]
-    }
-  },
-  {
-    "name": "crime",
-    "type": "BOOLEAN",
-    "mode": "NULLABLE",
-    "policyTags": {
-      "names": [
-        "${google_data_catalog_policy_tag.crime_policy_tag.id}"
-      ]
-    }
-  }
-]
-EOF
-
-  # external_data_configuration {
-  #   autodetect    = false
-  #   source_format = "CSV"
-
-  #   csv_options {
-  #     quote = ""
-  #   }
-
-  #   source_uris = [
-  #     "https://storage.cloud.google.com/chi110356042/mock1212.csv"
-  #   ]
-  # }
+  ]
+  EOF
 
 }
